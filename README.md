@@ -6,7 +6,7 @@ Mods and small projects, grouped by game.
 
 | Mod | What it is |
 |-----|------------|
-| [Malphar's No Fun Cheat Mod](./Dwarf%20Fortress/malphars-no-fun-cheat-mod) | A DFHack cheat mod for Steam Dwarf Fortress. It was an exercise in whether this kind of mod could be made. It removes Fun. |
+| [Malphar's No Fun Cheat Mod](./Dwarf%20Fortress/malphars-no-fun-cheat-mod) | A DFHack cheat mod for Steam Dwarf Fortress. For when you don't want to have any fun. |
 
 ## Layout
 

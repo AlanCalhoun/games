@@ -2,9 +2,9 @@
 
 This was an exercise in whether this kind of mod could be made, not whether it should.
 
-> Losing is **Fun**. Fun is the flooded fortress, the beast from the cavern, the werebeast you did not notice, the shortage, and the collapse of a fort you cared about.
+> For when you don't want to have any fun.
 >
-> This mod removes Fun. All of it. A fortress that cannot be lost is not Fun.
+> The flooded fortress, the beast from the cavern, the werebeast you did not notice, the shortage, and the collapse are taken away. There is nothing left to lose.
 
 | | |
 |---|---|
