@@ -13,7 +13,7 @@ This was an exercise in whether this kind of mod could be made, not whether it s
 | Version | 1.4.0 |
 | Source | [AlanCalhoun/games](https://github.com/AlanCalhoun/games/tree/main/Dwarf%20Fortress/malphars-no-fun-cheat-mod) |
 
-![Malphar's No Fun Cheat Mod](banner.png)
+![Malphar's No Fun Cheat Mod](banner.jpg)
 
 ## Install
 
