@@ -13,3 +13,5 @@
 [STEAM_TAG:dfhack]
 [STEAM_TAG:cheat]
 [STEAM_TAG:item]
+
+[STEAM_FILE_ID:3809943983]

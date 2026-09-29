@@ -40,6 +40,8 @@ The DFHack scripts start when the fort loads. You do not type commands.
 
 **No miasma.** Plants, food, meat, and corpses are kept from rotting. Any miasma already in the fort is cleared.
 
+**Stockpile.** Every stockpile shares one inventory. A pile next to a workshop can use the goods in any other pile. Food and drink go in barrels. Clothes, gems, bars, ammo, mined boulders, and other small goods go in bins. Anything dropped on the ground is put into the nearest pile. Refuse and corpses stay out.
+
 **MultiHaul.** One dwarf hauls several items in one job. This needs a wheelbarrow. The mod stocks an adamantine one, and the cheat workshop can conjure more. MultiHaul is [Loire's script](https://steamcommunity.com/sharedfiles/filedetails/?id=3532363345), included so this mod can run alone.
 
 ## Malphar's Cheat Workshop
