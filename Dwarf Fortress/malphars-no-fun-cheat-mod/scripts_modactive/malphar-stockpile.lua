@@ -8,8 +8,8 @@ local utils = require('utils')
 
 local GLOBAL_KEY = 'malphars_stockpile'
 local PILE_NAME = 'Malphar'
-local MOVE_CAP = 40
-local BOULDER_CAP = 300
+local MOVE_CAP = 8
+local BOULDER_CAP = 8
 local PER_CONTAINER = 100
 local BOULDER_PER_BIN = 5000
 
@@ -355,11 +355,16 @@ local function dist2(x, y, z, x2, y2, z2)
     return dx * dx + dy * dy + dz * dz
 end
 
-local function nearest_roomy(item, containers, limit)
+local function nearest_roomy(item, containers, limit, counts)
     local x, y, z = item_pos(item)
     local best, best_d
     for _, container in ipairs(containers) do
-        if contained_count(container) < limit then
+        local n = counts[container.id]
+        if n == nil then
+            n = contained_count(container)
+            counts[container.id] = n
+        end
+        if n < limit then
             local cx, cy, cz = item_pos(container)
             local d = 0
             if x and cx then d = dist2(x, y, z, cx, cy, cz) end
@@ -420,6 +425,7 @@ end
 local function load_goods(piles, bins, barrels)
     local list = df.global.world.items.other.IN_PLAY
     if not list then return end
+    local counts = {}
     local moved = 0
     for i = 0, #list - 1 do
         if moved >= MOVE_CAP then break end
@@ -428,14 +434,15 @@ local function load_goods(piles, bins, barrels)
             local kind = item:getType()
             local attempted = false
             local ok = false
+            local container
             if BIN_TYPES[kind] then
-                local container = nearest_roomy(item, bins, PER_CONTAINER)
+                container = nearest_roomy(item, bins, PER_CONTAINER, counts)
                 if container then
                     attempted = true
                     ok = pcall(function() dfhack.items.moveToContainer(item, container) end)
                 end
             elseif BARREL_TYPES[kind] then
-                local container = nearest_roomy(item, barrels, PER_CONTAINER)
+                container = nearest_roomy(item, barrels, PER_CONTAINER, counts)
                 if container then
                     attempted = true
                     ok = pcall(function() dfhack.items.moveToContainer(item, container) end)
@@ -449,6 +456,9 @@ local function load_goods(piles, bins, barrels)
             end
             if ok and item.flags and not item.flags.on_ground then
                 moved = moved + 1
+                if container then
+                    counts[container.id] = (counts[container.id] or 0) + 1
+                end
             elseif attempted then
                 failed_ids[item.id] = true
             end
@@ -459,16 +469,18 @@ end
 local function load_boulders(bins)
     local list = df.global.world.items.other.BOULDER
     if not list or #bins == 0 then return end
+    local counts = {}
     local moved = 0
     for i = 0, #list - 1 do
         if moved >= BOULDER_CAP then break end
         local item = list[i]
         if loose_enough(item) then
-            local container = nearest_roomy(item, bins, BOULDER_PER_BIN)
+            local container = nearest_roomy(item, bins, BOULDER_PER_BIN, counts)
             if not container then break end
             local ok = pcall(function() dfhack.items.moveToContainer(item, container) end)
             if ok then
                 moved = moved + 1
+                counts[container.id] = (counts[container.id] or 0) + 1
             else
                 failed_ids[item.id] = true
             end
@@ -563,7 +575,7 @@ local function do_enable()
     announced = false
     failed_ids = {}
     sweep()
-    repeatutil.scheduleEvery(GLOBAL_KEY, 1000, 'ticks', sweep)
+    repeatutil.scheduleEvery(GLOBAL_KEY, 2500, 'ticks', sweep)
 end
 
 local function do_disable()
