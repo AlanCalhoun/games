@@ -1178,7 +1178,11 @@ local function ensure_larder()
             local race_ok = false
             pcall(function() race_ok = item.race == stock.fish_race end)
             if race_ok then return true end
-            return item.mat_type == stock.fish_race and item.mat_index == stock.fish_caste
+            local mat_ok = false
+            pcall(function()
+                mat_ok = item.mat_type == stock.fish_race and item.mat_index == stock.fish_caste
+            end)
+            return mat_ok
         end, 20, function(amount)
             local item_ok, item = pcall(function()
                 local created = dfhack.items.createItem(

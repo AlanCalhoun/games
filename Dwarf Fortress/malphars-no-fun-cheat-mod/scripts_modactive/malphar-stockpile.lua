@@ -213,20 +213,31 @@ local function park(item, pile, tile)
     return grounded
 end
 
-local function spawn_container(unit, item_type, mat, pile, tile)
+local function spawn_container(unit, item_type, mat, pile, tile, subtype)
+    subtype = subtype or -1
     local created
     local ok = pcall(function()
-        created = dfhack.items.createItem(unit, item_type, -1, mat.type, mat.index, false)
+        created = dfhack.items.createItem(unit, item_type, subtype, mat.type, mat.index, false)
     end)
     if not ok or not created then
         pcall(function()
-            created = dfhack.items.createItem(item_type, -1, mat.type, mat.index, unit)
+            created = dfhack.items.createItem(item_type, subtype, mat.type, mat.index, unit)
         end)
     end
     local item = first_created(created)
     if not item then return nil end
     if not park(item, pile, tile) then return nil end
     return item
+end
+
+local function is_wheelbarrow(item)
+    local ok, yes = pcall(function() return item:isWheelbarrow() end)
+    return ok and yes == true
+end
+
+local function wheelbarrow_subtype()
+    local ok, sub = pcall(dfhack.items.findSubtype, 'TOOL:ITEM_TOOL_WHEELBARROW')
+    if ok and type(sub) == 'number' and sub >= 0 then return sub end
 end
 
 local function add_container(bins, barrels, barrows, seen, item)
@@ -237,7 +248,7 @@ local function add_container(bins, barrels, barrows, seen, item)
         bins[#bins + 1] = item
     elseif kind == df.item_type.BARREL then
         barrels[#barrels + 1] = item
-    elseif kind == df.item_type.WHEELBARROW then
+    elseif is_wheelbarrow(item) then
         barrows[#barrows + 1] = item
     end
 end
@@ -271,9 +282,13 @@ local function contents_of(pile, tiles)
         end
     end
     if others then
-        scan(others.BIN)
-        scan(others.BARREL)
-        scan(others.WHEELBARROW)
+        local function field(name)
+            local found, list = pcall(function() return others[name] end)
+            if found then return list end
+        end
+        scan(field('BIN'))
+        scan(field('BARREL'))
+        scan(field('TOOL'))
     end
     return bins, barrels, barrows
 end
@@ -304,7 +319,11 @@ local function ensure_containers(pile)
     while #barrows < want_barrows do
         local tile
         tile, used = next_tile(used)
-        local item = spawn_container(unit, df.item_type.WHEELBARROW, mat, pile, tile)
+        local sub = wheelbarrow_subtype()
+        local item
+        if sub then
+            item = spawn_container(unit, df.item_type.TOOL, mat, pile, tile, sub)
+        end
         if not item then break end
         barrows[#barrows + 1] = item
     end
@@ -381,9 +400,7 @@ local function loose_enough(item)
         return false
     end
     local kind = item:getType()
-    if kind == df.item_type.BIN or kind == df.item_type.BARREL
-        or kind == df.item_type.WHEELBARROW
-    then
+    if kind == df.item_type.BIN or kind == df.item_type.BARREL or is_wheelbarrow(item) then
         return false
     end
     return true
