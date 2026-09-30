@@ -809,6 +809,30 @@ local function spawn_at(unit, item_type, subtype, mat, pos)
     return item
 end
 
+local function tied_to_construction(item, pos)
+    if not item or not item.flags then return true end
+    if item.flags.garbage_collect or item.flags.construction then return true end
+    if not item.flags.in_job and not item.flags.in_building and not item.flags.in_inventory then
+        return false
+    end
+    local ok, x, y, z = pcall(dfhack.items.getPosition, item)
+    if not ok or not x then return true end
+    local found, bld = pcall(dfhack.buildings.findAtTile, x, y, z)
+    if not found or not bld then return false end
+    if bld:getType() == df.building_type.Stockpile then return false end
+    if pos and x == pos.x and y == pos.y and z == pos.z then return false end
+    return true
+end
+
+local function follow_cursor(item, pos)
+    if item.flags.in_job or item.flags.in_inventory or item.flags.in_building then
+        item.flags.in_job = false
+        item.flags.in_inventory = false
+        item.flags.in_building = false
+    end
+    put_on_ground(item, pos)
+end
+
 local function place_at_cursor()
     if not enabled or not dfhack.isMapLoaded() or not placing_now() then return end
     if not materials then return end
@@ -833,13 +857,13 @@ local function place_at_cursor()
             local pool = place_pools[pool_key] or {}
             local kept = {}
             for _, item in ipairs(pool) do
-                local same = item and item_is_free(item) and item:getType() == item_type
+                local same = item and not tied_to_construction(item, pos) and item:getType() == item_type
                 if same and subtype >= 0 then
                     local ok_sub, sub = pcall(function() return item:getSubtype() end)
                     same = ok_sub and sub == subtype
                 end
                 if same then
-                    put_on_ground(item, pos)
+                    follow_cursor(item, pos)
                     kept[#kept + 1] = item
                 end
             end
