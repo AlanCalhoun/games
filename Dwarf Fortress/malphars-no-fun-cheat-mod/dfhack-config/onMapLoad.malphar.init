@@ -1,0 +1,13 @@
+# Copy into DF's dfhack-config/init/ (or merge into onMapLoad.init).
+# Malphar No Fun Cheat Mod — force scripts on every fort load.
+# Keep this list complete when adding a new malphar-*.lua script.
+malphar-hide-rubble
+malphar-adamantine
+malphar-stockpile
+malphar-superdwarf
+malphar-unstuck
+malphar-mandates
+malphar-power
+malphar-cleanup
+malphar-no-miasma
+malphar-workshop

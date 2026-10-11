@@ -10,7 +10,7 @@ This was an exercise in whether this kind of mod could be made, not whether it s
 |---|---|
 | Game | Steam Dwarf Fortress |
 | Requires | [DFHack](https://github.com/DFHack/dfhack) |
-| Version | 1.5.0 |
+| Version | 1.5.7 |
 | Source | [AlanCalhoun/games](https://github.com/AlanCalhoun/games/tree/main/Dwarf%20Fortress/malphars-no-fun-cheat-mod) |
 
 ![Malphar's No Fun Cheat Mod](banner.jpg)
@@ -40,9 +40,19 @@ The DFHack scripts start when the fort loads. You do not type commands.
 
 **No miasma.** Plants, food, meat, and corpses are kept from rotting. Any miasma already in the fort is cleared.
 
-**Stockpile.** Every stockpile shares one inventory. A pile next to a workshop can use the goods in any other pile. Food and drink go in barrels. Clothes, gems, bars, ammo, mined boulders, and other small goods go in bins. Anything dropped on the ground is put into the nearest pile. Refuse and corpses stay out.
+**Stockpile.** Every stockpile shares one inventory. Goods teleport into infinite bins and barrels — dwarves do not haul stockpile jobs. Floors stay clear; dropped and forbidden items are unforbidden and pulled into the nearest pile. Workshop clutter is cleared. Wood is kept near 100 logs so tree-felling does not flood the map. Materials stay near 100 each; food, drink, and clothes scale with population (about 2× citizens).
 
-**MultiHaul.** One dwarf hauls several items in one job. This needs a wheelbarrow. The mod stocks an adamantine one, and the cheat workshop can conjure more. MultiHaul is [Loire's script](https://steamcommunity.com/sharedfiles/filedetails/?id=3532363345), included so this mod can run alone.
+**Ghosts.** At most one ghost is allowed, and only for about seven days, then it is put to rest. Fort-citizen corpses stay for burial; animal refuse is dumped.
+
+**Stuck dwarves.** Citizens who cannot path are teleported to the embark wagon, or the trade depot if the wagon is gone.
+
+**Ammo.** Ballistas, bolt throwers, and catapults stay loaded. Crossbows, bows, and blowguns get bolts, arrows, or darts on the carrier (about 50). Stock keeps ~1000 of each ammo type plus ballista bolts.
+
+**Power.** Screw pumps, millstones, and rollers run by themselves — no axles, windmills, or water wheels. Power need is forced to zero. To toggle them, place a gear next to the machines (no axle), link a lever to that gear; disengage = off for machines within a few tiles. Vanilla cannot link levers to pumps — the gear is the switch.
+
+**Production mandates.** Noble Make mandates complete automatically. Export bans are left alone.
+
+**MultiHaul.** Included so this mod can run alone ([Loire](https://steamcommunity.com/sharedfiles/filedetails/?id=3532363345)). Stockpile teleport means you usually do not need dwarf hauling.
 
 ## Malphar's Cheat Workshop
 
@@ -71,7 +81,24 @@ The mod does not need these. The console is backtick, Ctrl+Shift+D, or Ctrl+Shif
 | `gui/create-item`, `gui/sandbox` | Spawn things by hand. |
 | `gui/liquids`, `gui/teleport` | Liquids, and teleport (Ctrl+Shift+T). |
 
-`disable malphar-adamantine` turns placement and ground stock off until the fort loads again. `disable malphar-superdwarf`, `disable malphar-hide-rubble`, `disable malphar-no-miasma`, and `disable malphar-cleanup` work the same way. `disable multihaul` turns off hauling.
+`disable malphar-adamantine` turns placement and ground stock off until the fort loads again. The same pattern works for every `malphar-*` script below. `disable multihaul` turns off hauling.
+
+## Scripts (always part of the mod)
+
+New cheat behavior goes in `scripts_modactive/malphar-*.lua` and is listed in `onMapLoad.malphar.init` / `onMapLoad.init`. Do not leave one-off console fixes out of the package.
+
+| Script | Role |
+|---|---|
+| `malphar-adamantine` | Placement items, ground stock, meals, drinks, wardrobe, soft caps |
+| `malphar-stockpile` | Shared piles, teleport stock, infinite containers, no haul, wood cap |
+| `malphar-superdwarf` | Instant jobs for citizens |
+| `malphar-unstuck` | Path-stuck citizens → wagon / trade depot |
+| `malphar-mandates` | Auto-complete production (Make) mandates |
+| `malphar-power` | Self-power pumps, mills, rollers (no axles; zero power need) |
+| `malphar-cleanup` | Refuse dump, workshop corpses, ghost limit |
+| `malphar-hide-rubble` | Hide mined boulders / rough gems |
+| `malphar-no-miasma` | No rot / no miasma |
+| `malphar-workshop` | Cheat shop reactions on old and new forts |
 
 ## Limits
 

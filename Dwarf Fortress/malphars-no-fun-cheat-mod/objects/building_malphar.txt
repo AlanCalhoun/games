@@ -37,4 +37,4 @@ building_malphar
 	[COLOR:3:2:0:0:0:0:0:0:6:7:0]
 	[COLOR:3:3:5:0:1:7:0:1:0:0:0]
 	[BUILD_ITEM:1:NONE:NONE:NONE:NONE][BUILDMAT][WORTHLESS_STONE_ONLY]
-	[TOOLTIP:Conjure masterwork fortress goods from nothing. Jobs are grouped into Food, Hospital, Furniture, Weapons, Armor, Materials, and Tools.]
+	[TOOLTIP:Conjure masterwork fortress goods from nothing. Food includes all plant seeds and a job that spawns one of every item. Also Hospital, Furniture, Weapons, Armor, Materials, and Tools.]

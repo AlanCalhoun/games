@@ -12,7 +12,6 @@ creature_malphar
 		[NOSTUN]
 		[NO_DIZZINESS]
 		[NO_FEVERS]
-		[NOEMOTION]
 		[NOEXERT]
 		[NOFEAR]
 		[SKILL_LEARN_RATES:1000]

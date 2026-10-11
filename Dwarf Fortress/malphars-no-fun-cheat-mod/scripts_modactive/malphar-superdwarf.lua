@@ -38,7 +38,7 @@ local function do_enable()
     eventful.onUnitNewActive[GLOBAL_KEY] = on_new_unit
     apply_citizens()
     repeatutil.scheduleEvery(GLOBAL_KEY, 1, 'days', apply_citizens)
-    print('Malphar\'s Mod: superdwarf is on. Citizens finish jobs immediately.')
+    print("Malphar's Mod: superdwarf is on. Citizens finish jobs immediately.")
 end
 
 local function do_disable()
@@ -51,7 +51,7 @@ local function do_disable()
             superdwarf.main({'clear'})
         end
     end
-    print('Malphar\'s Mod: superdwarf is off.')
+    print("Malphar's Mod: superdwarf is off.")
 end
 
 dfhack.onStateChange[GLOBAL_KEY] = function(sc)
@@ -59,7 +59,6 @@ dfhack.onStateChange[GLOBAL_KEY] = function(sc)
         enabled = false
         eventful.onUnitNewActive[GLOBAL_KEY] = nil
         repeatutil.cancel(GLOBAL_KEY)
-        dfhack.onStateChange[GLOBAL_KEY] = nil
         return
     end
     if sc ~= SC_MAP_LOADED or not dfhack.world.isFortressMode() then

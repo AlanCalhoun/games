@@ -73,12 +73,12 @@ local function freeze(item)
     pcall(function()
         local temp = item.temperature
         if not temp then return end
-        -- Drinks at freezing point turn solid. Hold them just above that.
         local limit = FROZEN
         if item.getType and item:getType() == df.item_type.DRINK then
             limit = 10015
         end
-        if temp.whole ~= limit and (item:getType() == df.item_type.DRINK or temp.whole > limit) then
+        if temp.whole == limit then return end
+        if item:getType() == df.item_type.DRINK or temp.whole > limit then
             temp.whole = limit
             temp.fraction = 0
         end
@@ -116,8 +116,9 @@ local function do_enable()
     enabled = true
     rots_stripped = false
     sweep()
-    repeatutil.scheduleEvery(GLOBAL_KEY, 100, 'ticks', sweep)
-    repeatutil.scheduleEvery(CLEAR_KEY, 1, 'ticks', clear_only)
+    -- Freeze food rarely. Kill miasma often enough to stay invisible, not every tick.
+    repeatutil.scheduleEvery(GLOBAL_KEY, 1049, 'ticks', sweep)
+    repeatutil.scheduleEvery(CLEAR_KEY, 19, 'ticks', clear_only)
     print("Malphar's Mod: miasma is off.")
 end
 
@@ -134,7 +135,6 @@ dfhack.onStateChange[GLOBAL_KEY] = function(sc)
         rots_stripped = false
         repeatutil.cancel(GLOBAL_KEY)
         repeatutil.cancel(CLEAR_KEY)
-        dfhack.onStateChange[GLOBAL_KEY] = nil
         return
     end
     if sc ~= SC_MAP_LOADED or not dfhack.world.isFortressMode() then
