@@ -1,0 +1,3 @@
+# Copy into DF's dfhack-config/init/ (or merge into onMapLoad.init).
+# Malphar's No Fun Stockpiles — stockpile cheat only.
+malphar-nofun-stockpiles
